@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/setting"
+        android:icon="@mipmap/ic_more_vert_white_48dp"
+        android:orderInCategory="100"
+        app:showAsAction="always"
+        android:title="Settings"
+        tools:ignore="AppCompatResource" />
+
+    <item
+        android:id="@+id/apppurchase"
+        android:icon="@mipmap/ic_store_white_48dp"
+        android:orderInCategory="10"
+        app:showAsAction="always"
+        android:title="Store"
+        tools:ignore="AppCompatResource" />
+</menu>

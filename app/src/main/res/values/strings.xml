@@ -1,0 +1,53 @@
+<resources>
+    <string name="app_name">Walley</string>
+    <string name="title_home">Home</string>
+    <string name="title_category">Category</string>
+    <string name="title_favourite">Favourite</string>
+    <string name="title_myalbum">My Album</string>
+    <string name="title_settings">Settings</string>
+
+    <string name="settings_general">Walley Settings</string>
+    <string name="settings_autochange_title">Auto Change Wallpapers</string>
+    <string name="settings_autochange_desc">This will enable Walley to change wallpapers automatically</string>
+    <string name="settings_frequency_title">Time Interval</string>
+    <string name="settings_frequency_desc">Change wallpaper after every</string>
+    <string name="settings_network_title">Data Saving Mode</string>
+    <string name="settings_network_desc">Wallpapers will change only when connected to a Wi-Fi Network</string>
+    <string name="settings_categories_title">Categories</string>
+    <string name="settings_categories_desc">Choose categories which you like most</string>
+
+    <string name="settings_about">About Walley</string>
+    <string name="settings_adfree_title">Ad-Free Version</string>
+    <string name="settings_adfree_desc">Want no Ads in App, buy a pro version</string>
+    <string name="settings_recommend_title">Recommend Walley</string>
+    <string name="settings_recommend_desc">Share Walley with your Friends</string>
+    <string name="settings_rate_title">Rate Us</string>
+    <string name="settings_rate_desc">Rate Walley to stay it motivated</string>
+    <string name="settings_feedback_title">Feedback</string>
+    <string name="settings_feedback_desc">Please write us if you hava any questions</string>
+    <string name="settings_about_title">About Creator</string>
+    <string name="settings_about_desc">Know more about us</string>
+
+    <string name="ok">OK</string>
+    <string name="done">DONE</string>
+    <string name="camera">CAMERA</string>
+    <string name="image_directory">Camera</string>
+
+    <string name="title_folder">Folder</string>
+    <string name="title_select_image">Tap to select images</string>
+    <string name="title_permission_denied">Permission denied</string>
+
+    <string name="selected">%d selected</string>
+    <string name="selected_with_limit">%1$d/%2$d selected</string>
+
+    <string name="error_create_image_file">Failed to create image file</string>
+    <string name="error_no_camera">No camera found</string>
+    <string name="error_null_cursor">Oops, something went wrong!</string>
+
+    <string name="msg_empty_images">No images found</string>
+    <string name="msg_no_write_external_permission">Please grant storage permission to select images</string>
+    <string name="msg_no_camera_permission">Please grant camera permission to capture image</string>
+    <string name="msg_limit_images">Image selection limit</string>
+
+    <string name="shared_file_provider">com.nguyenNitij.imagepicker.provider</string>
+</resources>

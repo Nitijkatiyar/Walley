@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#8000"
+    android:orientation="vertical">
+
+
+    <com.tecbeast.hdwallpapers.utils.ScrollingViewPager
+        android:id="@+id/pager"
+        android:layout_width="fill_parent"
+
+        android:layout_height="fill_parent"
+        android:scaleType="matrix" />
+
+    <ImageView
+        android:id="@+id/close"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:src="@mipmap/ic_cancel" />
+</RelativeLayout>
