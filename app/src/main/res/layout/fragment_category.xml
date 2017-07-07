@@ -7,17 +7,11 @@
     android:orientation="vertical">
 
 
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></ListView>
 
-    <Button
-        android:id="@+id/btn_click_me"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:text="Category"
-        android:textSize="18sp"
-        android:paddingLeft="24dp"
-        android:paddingRight="24dp"/>
 
 </LinearLayout>
 
