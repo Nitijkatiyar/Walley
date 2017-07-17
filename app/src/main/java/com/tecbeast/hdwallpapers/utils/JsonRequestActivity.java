@@ -1,4 +1,4 @@
-package com.tecbeast.hdwallpapers.picasawallpapers.util;
+package com.tecbeast.hdwallpapers.utils;
 
 
 import java.util.HashMap;
@@ -15,7 +15,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
-import com.android.volley.Request.Method;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;

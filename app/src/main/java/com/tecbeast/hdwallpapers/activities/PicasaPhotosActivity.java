@@ -1,45 +1,41 @@
-package com.tecbeast.hdwallpapers.picasawallpapers;
+package com.tecbeast.hdwallpapers.activities;
 
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.tecbeast.hdwallpapers.MyApplication;
 import com.tecbeast.hdwallpapers.R;
-import com.tecbeast.hdwallpapers.picasawallpapers.app.AppConst;
-import com.tecbeast.hdwallpapers.picasawallpapers.app.AppController;
-import com.tecbeast.hdwallpapers.picasawallpapers.helper.GridViewAdapter;
-import com.tecbeast.hdwallpapers.picasawallpapers.picasa.model.Wallpaper;
-import com.tecbeast.hdwallpapers.picasawallpapers.util.PrefManager;
-import com.tecbeast.hdwallpapers.picasawallpapers.util.Utils;
+import com.tecbeast.hdwallpapers.adapter.PicasaPhotosAdapter;
+import com.tecbeast.hdwallpapers.model.Wallpaper;
+import com.tecbeast.hdwallpapers.preference.PrefManager;
+import com.tecbeast.hdwallpapers.utils.AppConst;
+import com.tecbeast.hdwallpapers.utils.WallpapersUtils;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class GridFragment extends Fragment {
-    private static final String TAG = GridFragment.class.getSimpleName();
-    private Utils utils;
-    private GridViewAdapter adapter;
+public class PicasaPhotosActivity extends BaseActivity {
+    private static final String TAG = PicasaPhotosActivity.class.getSimpleName();
+    private WallpapersUtils utils;
+    private PicasaPhotosAdapter adapter;
     private GridView gridView;
     private int columnWidth;
     private static final String bundleAlbumId = "albumId";
@@ -55,28 +51,19 @@ public class GridFragment extends Fragment {
             TAG_IMG_WIDTH = "width", TAG_IMG_HEIGHT = "height", TAG_ID = "id",
             TAG_T = "$t";
 
-    public GridFragment() {
-    }
-
-    public static GridFragment newInstance(String albumId) {
-        GridFragment f = new GridFragment();
-        Bundle args = new Bundle();
-        args.putString(bundleAlbumId, albumId);
-        f.setArguments(args);
-        return f;
-    }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.fragment_grid);
 
         photosList = new ArrayList<Wallpaper>();
-        pref = new PrefManager(getActivity());
+        pref = new PrefManager(this);
 
         // Getting Album Id of the item selected in navigation drawer
         // if Album Id is null, user is selected recently added option
-        if (getArguments().getString(bundleAlbumId) != null) {
-            selectedAlbumId = getArguments().getString(bundleAlbumId);
+        if (getIntent().getStringExtra(bundleAlbumId) != null) {
+            selectedAlbumId = getIntent().getStringExtra(bundleAlbumId);
         } else {
             selectedAlbumId = null;
         }
@@ -85,24 +72,18 @@ public class GridFragment extends Fragment {
         String url = null;
 
         // Selected an album, replace the Album Id in the url
-        url = AppConst.URL_ALBUM_PHOTOS.replace("_PICASA_USER_",
-                pref.getGoogleUserName()).replace("_ALBUM_ID_",
-                selectedAlbumId);
+        url = AppConst.URL_ALBUM_PHOTOS.replace("_ALBUM_ID_", selectedAlbumId);
 
 
-        Log.d(TAG, "Final request url: " + url);
-
-        View rootView = inflater.inflate(R.layout.fragment_grid, container,
-                false);
 
         // Hiding the gridview and showing loader image before making the http
         // request
-        gridView = (GridView) rootView.findViewById(R.id.grid_view);
+        gridView = (GridView) findViewById(R.id.grid_view);
         gridView.setVisibility(View.GONE);
-        pbLoader = (ProgressBar) rootView.findViewById(R.id.pbLoader);
+        pbLoader = (ProgressBar) findViewById(R.id.pbLoader);
         pbLoader.setVisibility(View.VISIBLE);
 
-        utils = new Utils(getActivity());
+        utils = new WallpapersUtils(PicasaPhotosActivity.this);
 
         /**
          * Making volley's json object request to fetch list of photos of an
@@ -165,7 +146,7 @@ public class GridFragment extends Fragment {
 
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    Toast.makeText(getActivity(),
+                    Toast.makeText(PicasaPhotosActivity.this,
                             getString(R.string.msg_unknown_error),
                             Toast.LENGTH_LONG).show();
                 }
@@ -179,7 +160,7 @@ public class GridFragment extends Fragment {
                 // unable to fetch wallpapers
                 // either google username is wrong or
                 // devices doesn't have internet connection
-                Toast.makeText(getActivity(),
+                Toast.makeText(PicasaPhotosActivity.this,
                         getString(R.string.msg_wall_fetch_error),
                         Toast.LENGTH_LONG).show();
 
@@ -187,20 +168,20 @@ public class GridFragment extends Fragment {
         });
 
         // Remove the url from cache
-        AppController.getInstance().getRequestQueue().getCache().remove(url);
+        MyApplication.getInstance().getRequestQueue().getCache().remove(url);
 
         // Disable the cache for this url, so that it always fetches updated
         // json
         jsonObjReq.setShouldCache(false);
 
         // Adding request to request queue
-        AppController.getInstance().addToRequestQueue(jsonObjReq);
+        MyApplication.getInstance().addToRequestQueue(jsonObjReq);
 
         // Initilizing Grid View
         InitilizeGridLayout();
 
         // Gridview adapter
-        adapter = new GridViewAdapter(getActivity(), photosList, columnWidth);
+        adapter = new PicasaPhotosAdapter(PicasaPhotosActivity.this, photosList, columnWidth);
 
         // setting grid view adapter
         gridView.setAdapter(adapter);
@@ -212,7 +193,7 @@ public class GridFragment extends Fragment {
                                     int position, long id) {
 
                 // On selecting the grid image, we launch fullscreen activity
-                Intent i = new Intent(getActivity(),
+                Intent i = new Intent(PicasaPhotosActivity.this,
                         FullScreenViewActivity.class);
 
                 // Passing selected image to fullscreen activity
@@ -223,7 +204,6 @@ public class GridFragment extends Fragment {
             }
         });
 
-        return rootView;
     }
 
     /**

@@ -1,4 +1,4 @@
-package com.tecbeast.hdwallpapers.picasawallpapers.util;
+package com.tecbeast.hdwallpapers.preference;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,8 +12,8 @@ import android.content.SharedPreferences.Editor;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.tecbeast.hdwallpapers.picasawallpapers.app.AppConst;
-import com.tecbeast.hdwallpapers.picasawallpapers.picasa.model.Category;
+import com.tecbeast.hdwallpapers.utils.AppConst;
+import com.tecbeast.hdwallpapers.model.Category;
 
 public class PrefManager {
 	private static final String TAG = PrefManager.class.getSimpleName();

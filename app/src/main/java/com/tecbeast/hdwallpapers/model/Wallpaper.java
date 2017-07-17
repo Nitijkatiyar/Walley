@@ -1,4 +1,4 @@
-package com.tecbeast.hdwallpapers.picasawallpapers.picasa.model;
+package com.tecbeast.hdwallpapers.model;
 
 import java.io.Serializable;
 

@@ -1,4 +1,4 @@
-package com.tecbeast.hdwallpapers.picasawallpapers.app;
+package com.tecbeast.hdwallpapers;
 
 import android.app.Application;
 import android.text.TextUtils;
@@ -7,19 +7,19 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
-import com.tecbeast.hdwallpapers.picasawallpapers.util.LruBitmapCache;
-import com.tecbeast.hdwallpapers.picasawallpapers.util.PrefManager;
+import com.tecbeast.hdwallpapers.utils.LruBitmapCache;
+import com.tecbeast.hdwallpapers.preference.PrefManager;
 
 
-public class AppController extends Application {
+public class MyApplication extends Application {
 
-	public static final String TAG = AppController.class.getSimpleName();
+	public static final String TAG = MyApplication.class.getSimpleName();
 
 	private RequestQueue mRequestQueue;
 	private ImageLoader mImageLoader;
 	LruBitmapCache mLruBitmapCache;
 
-	private static AppController mInstance;
+	private static MyApplication mInstance;
 	private PrefManager pref;
 
 	@Override
@@ -29,7 +29,7 @@ public class AppController extends Application {
 		pref = new PrefManager(this);
 	}
 
-	public static synchronized AppController getInstance() {
+	public static synchronized MyApplication getInstance() {
 		return mInstance;
 	}
 

@@ -1,9 +1,5 @@
-package com.tecbeast.hdwallpapers.picasawallpapers;
+package com.tecbeast.hdwallpapers.activities;
 
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -22,25 +18,31 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.kc.unsplash.models.Photo;
+import com.tecbeast.hdwallpapers.MyApplication;
 import com.tecbeast.hdwallpapers.R;
-import com.tecbeast.hdwallpapers.picasawallpapers.app.AppController;
-import com.tecbeast.hdwallpapers.picasawallpapers.picasa.model.Wallpaper;
-import com.tecbeast.hdwallpapers.picasawallpapers.util.Utils;
+import com.tecbeast.hdwallpapers.model.Wallpaper;
+import com.tecbeast.hdwallpapers.utils.WallpapersUtils;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 public class FullScreenViewActivity extends Activity implements OnClickListener {
 	private static final String TAG = FullScreenViewActivity.class
 			.getSimpleName();
-	public static final String TAG_SEL_IMAGE = "selectedImage";
+	public static final String TAG_SEL_IMAGE = "selectedImage_picase";
+	public static final String TAG_SEL_IMAGE_UNSPLASH = "selectedImage_unsplash";
 	private Wallpaper selectedPhoto;
+	private Photo selectedPhotoUnsplash;
 	private ImageView fullImageView;
 	private LinearLayout llSetWallpaper, llDownloadWallpaper;
-	private Utils utils;
+	private WallpapersUtils utils;
 	private ProgressBar pbLoader;
 
 	// Picasa JSON response node keys
@@ -48,6 +50,8 @@ public class FullScreenViewActivity extends Activity implements OnClickListener 
 			TAG_MEDIA_GROUP = "media$group",
 			TAG_MEDIA_CONTENT = "media$content", TAG_IMG_URL = "url",
 			TAG_IMG_WIDTH = "width", TAG_IMG_HEIGHT = "height";
+	ImageLoader imageLoader = MyApplication
+			.getInstance().getImageLoader();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +64,7 @@ public class FullScreenViewActivity extends Activity implements OnClickListener 
 		pbLoader = (ProgressBar) findViewById(R.id.pbLoader);
 
 
-		utils = new Utils(getApplicationContext());
+		utils = new WallpapersUtils(getApplicationContext());
 
 		// layout click listeners
 		llSetWallpaper.setOnClickListener(this);
@@ -72,13 +76,48 @@ public class FullScreenViewActivity extends Activity implements OnClickListener 
 
 		Intent i = getIntent();
 		selectedPhoto = (Wallpaper) i.getSerializableExtra(TAG_SEL_IMAGE);
+		selectedPhotoUnsplash = (Photo) i.getParcelableExtra(TAG_SEL_IMAGE_UNSPLASH);
 
-		// check for selected photo null
 		if (selectedPhoto != null) {
-
-			// fetch photo full resolution image by making another json request
 			fetchFullResolutionImage();
+		} else if (selectedPhotoUnsplash != null) {
+			// show loader before making request
+			pbLoader.setVisibility(View.VISIBLE);
+			llSetWallpaper.setVisibility(View.GONE);
+			llDownloadWallpaper.setVisibility(View.GONE);
+			imageLoader.get(selectedPhotoUnsplash.getUrls().getRegular(),
+					new ImageLoader.ImageListener() {
 
+						@Override
+						public void onErrorResponse(
+								VolleyError arg0) {
+							Toast.makeText(
+									getApplicationContext(),
+									getString(R.string.msg_wall_fetch_error),
+									Toast.LENGTH_LONG).show();
+						}
+
+						@Override
+						public void onResponse(
+								ImageLoader.ImageContainer response,
+								boolean arg1) {
+							if (response.getBitmap() != null) {
+								// load bitmap into imageview
+								fullImageView
+										.setImageBitmap(response
+												.getBitmap());
+
+								// hide loader and show set &
+								// download buttons
+								pbLoader.setVisibility(View.GONE);
+								llSetWallpaper
+										.setVisibility(View.VISIBLE);
+								llDownloadWallpaper
+										.setVisibility(View.VISIBLE);
+
+								}
+						}
+					});
 		} else {
 			Toast.makeText(getApplicationContext(),
 					getString(R.string.msg_unknown_error), Toast.LENGTH_SHORT)
@@ -129,8 +168,7 @@ public class FullScreenViewActivity extends Activity implements OnClickListener 
 									+ fullResolutionUrl + ", w: " + width
 									+ ", h: " + height);
 
-							ImageLoader imageLoader = AppController
-									.getInstance().getImageLoader();
+
 
 							// We download image into ImageView instead of
 							// NetworkImageView to have callback methods
@@ -195,14 +233,14 @@ public class FullScreenViewActivity extends Activity implements OnClickListener 
 				});
 
 		// Remove the url from cache
-		AppController.getInstance().getRequestQueue().getCache().remove(url);
+		MyApplication.getInstance().getRequestQueue().getCache().remove(url);
 
 		// Disable the cache for this url, so that it always fetches updated
 		// json
 		jsonObjReq.setShouldCache(false);
 
 		// Adding request to request queue
-		AppController.getInstance().addToRequestQueue(jsonObjReq);
+		MyApplication.getInstance().addToRequestQueue(jsonObjReq);
 	}
 
 	/**

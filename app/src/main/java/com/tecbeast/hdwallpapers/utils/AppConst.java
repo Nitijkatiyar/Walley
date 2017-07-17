@@ -1,4 +1,4 @@
-package com.tecbeast.hdwallpapers.picasawallpapers.app;
+package com.tecbeast.hdwallpapers.utils;
 
 
 public class AppConst {

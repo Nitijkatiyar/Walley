@@ -1,22 +1,27 @@
 package com.tecbeast.hdwallpapers.fragments;
 
+import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.GridView;
+import android.widget.ProgressBar;
 
 import com.kc.unsplash.Unsplash;
 import com.kc.unsplash.api.Order;
 import com.kc.unsplash.models.Photo;
 import com.tecbeast.hdwallpapers.R;
 import com.tecbeast.hdwallpapers.activities.MainActivity;
-import com.tecbeast.hdwallpapers.adapter.WallpapersAdapter;
+import com.tecbeast.hdwallpapers.adapter.UnSplashWallpapersAdapter;
+import com.tecbeast.hdwallpapers.activities.FullScreenViewActivity;
+import com.tecbeast.hdwallpapers.utils.AppConst;
+import com.tecbeast.hdwallpapers.utils.WallpapersUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +32,11 @@ public class HomeFragment extends BaseFragment {
     public static HomeFragment fragment;
     public static Unsplash unsplash;
     private List<Photo> photoList = new ArrayList<>();
-    private RecyclerView recyclerView;
-    WallpapersAdapter mAdapter;
+    UnSplashWallpapersAdapter mAdapter;
+    private WallpapersUtils utils;
+    private GridView gridView;
+    private int columnWidth;
+    private ProgressBar pbLoader;
 
     public static HomeFragment getInstance() {
         if (fragment == null) {
@@ -44,19 +52,38 @@ public class HomeFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        utils = new WallpapersUtils(getActivity());
 
+        gridView = (GridView) view.findViewById(R.id.grid_view);
+        gridView.setVisibility(View.GONE);
+        pbLoader = (ProgressBar) view.findViewById(R.id.pbLoader);
+        pbLoader.setVisibility(View.VISIBLE);
+        InitilizeGridLayout();
 
-
-        unsplash.getPhotos(1, 20, Order.LATEST, new Unsplash.OnPhotosLoadedListener() {
+        unsplash.getPhotos(1, 50, Order.LATEST, new Unsplash.OnPhotosLoadedListener() {
             @Override
             public void onComplete(List<Photo> photos) {
-                int photoCount = photos.size();
-                mAdapter = new WallpapersAdapter(photos,getActivity());
-                RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getActivity(),2);
-                recyclerView.setLayoutManager(mLayoutManager);
-                recyclerView.setItemAnimator(new DefaultItemAnimator());
-                recyclerView.setAdapter(mAdapter);
+                photoList = photos;
+
+                // Hide the loader, make grid visible
+                pbLoader.setVisibility(View.GONE);
+                gridView.setVisibility(View.VISIBLE);
+                mAdapter = new UnSplashWallpapersAdapter(getActivity(), photos, columnWidth);
+                gridView.setAdapter(mAdapter);
+
+                gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        // On selecting the grid image, we launch fullscreen activity
+                        Photo photo = photoList.get(i);
+                        Intent intent = new Intent(getActivity(),
+                                FullScreenViewActivity.class);
+                        intent.putExtra(FullScreenViewActivity.TAG_SEL_IMAGE_UNSPLASH, photo);
+                        startActivity(intent);
+                    }
+                });
+
+
             }
 
             @Override
@@ -91,6 +118,23 @@ public class HomeFragment extends BaseFragment {
 
     }
 
+    private void InitilizeGridLayout() {
+        Resources r = getResources();
+        float padding = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                AppConst.GRID_PADDING, r.getDisplayMetrics());
+
+        // Column width
+        columnWidth = (int) ((utils.getScreenWidth() - ((2 + 1) * padding)) / 2);
+        gridView.setNumColumns(2);
+        gridView.setColumnWidth(columnWidth);
+        gridView.setStretchMode(GridView.NO_STRETCH);
+        gridView.setPadding((int) padding, (int) padding, (int) padding,
+                (int) padding);
+
+        // Setting horizontal and vertical padding
+        gridView.setHorizontalSpacing((int) padding);
+        gridView.setVerticalSpacing((int) padding);
+    }
     @Override
     public void onDestroyView() {
         super.onDestroyView();

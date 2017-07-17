@@ -1,4 +1,4 @@
-package com.tecbeast.hdwallpapers.picasawallpapers.util;
+package com.tecbeast.hdwallpapers.utils;
 
 import com.android.volley.toolbox.ImageLoader.ImageCache;
 

@@ -105,14 +105,18 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         FragmentManager manager = getSupportFragmentManager();
-        if (manager.getFragments()!=null && manager.getFragments().contains(HomeFragment.getInstance())
+        if (manager.getFragments() != null) {
+            if (manager.getFragments().contains(HomeFragment.getInstance())
                 || manager.getFragments().contains(CategoryFragment.getInstance())
                 || manager.getFragments().contains(FavouritesFragment.getInstance())
                 || manager.getFragments().contains(MyAlbumFragment.getInstance())
                 ) {
-            finish();
-        } else if (manager.getBackStackEntryCount() > 0) {
-            manager.popBackStack();
+                finish();
+            } else if (manager.getBackStackEntryCount() > 0) {
+                manager.popBackStack();
+            }
+        } else {
+            super.onBackPressed();
         }
     }
 }

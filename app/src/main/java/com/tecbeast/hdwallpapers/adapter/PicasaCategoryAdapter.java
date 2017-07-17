@@ -7,27 +7,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.tecbeast.hdwallpapers.R;
-import com.tecbeast.hdwallpapers.picasawallpapers.app.AppConst;
-import com.tecbeast.hdwallpapers.picasawallpapers.app.AppController;
-import com.tecbeast.hdwallpapers.picasawallpapers.picasa.model.Category;
+import com.tecbeast.hdwallpapers.utils.AppConst;
+import com.tecbeast.hdwallpapers.MyApplication;
+import com.tecbeast.hdwallpapers.model.Category;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CategoryAdapter extends BaseAdapter {
+public class PicasaCategoryAdapter extends BaseAdapter {
 
     private Activity _activity;
     private LayoutInflater inflater;
     private List<Category> categoriesList = new ArrayList<Category>();
-    ImageLoader imageLoader = AppController.getInstance().getImageLoader();
+    ImageLoader imageLoader = MyApplication.getInstance().getImageLoader();
 
-    public CategoryAdapter(Activity activity, List<Category> categoriesList ) {
+    public PicasaCategoryAdapter(Activity activity, List<Category> categoriesList ) {
         this._activity = activity;
         this.categoriesList = categoriesList;
     }
@@ -56,7 +55,7 @@ public class CategoryAdapter extends BaseAdapter {
             convertView = inflater.inflate(R.layout.categories_listitem, null);
 
         if (imageLoader == null)
-            imageLoader = AppController.getInstance().getImageLoader();
+            imageLoader = MyApplication.getInstance().getImageLoader();
 
         // Grid thumbnail image view
         NetworkImageView thumbNail = (NetworkImageView) convertView

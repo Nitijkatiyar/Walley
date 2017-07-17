@@ -1,28 +1,24 @@
-package com.tecbeast.hdwallpapers.picasawallpapers;
+package com.tecbeast.hdwallpapers.activities;
 
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
 
-
-import com.android.volley.Request.Method;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.tecbeast.hdwallpapers.MyApplication;
 import com.tecbeast.hdwallpapers.R;
-import com.tecbeast.hdwallpapers.picasawallpapers.app.AppConst;
-import com.tecbeast.hdwallpapers.picasawallpapers.app.AppController;
-import com.tecbeast.hdwallpapers.picasawallpapers.picasa.model.Category;
-import com.tecbeast.hdwallpapers.picasawallpapers.picasa.model.Wallpaper;
+import com.tecbeast.hdwallpapers.model.Category;
+import com.tecbeast.hdwallpapers.utils.AppConst;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,12 +84,12 @@ public class SplashActivity extends Activity {
                     }
 
                     // Store albums in shared pref
-                    AppController.getInstance().getPrefManger()
+                    MyApplication.getInstance().getPrefManger()
                             .storeCategories(albums);
 
                     // String the main activity
                     Intent intent = new Intent(getApplicationContext(),
-                            MainActivity.class);
+                            com.tecbeast.hdwallpapers.activities.MainActivity.class);
                     startActivity(intent);
                     // closing spalsh activity
                     finish();
@@ -119,26 +115,15 @@ public class SplashActivity extends Activity {
 
                 // Unable to fetch albums
                 // check for existing Albums data in Shared Preferences
-                if (AppController.getInstance().getPrefManger()
-                        .getCategories() != null && AppController.getInstance().getPrefManger()
+                if (MyApplication.getInstance().getPrefManger()
+                        .getCategories() != null && MyApplication.getInstance().getPrefManger()
                         .getCategories().size() > 0) {
                     // String the main activity
                     Intent intent = new Intent(getApplicationContext(),
-                            MainActivity.class);
+                            com.tecbeast.hdwallpapers.activities.MainActivity.class);
                     startActivity(intent);
                     // closing spalsh activity
                     finish();
-                } else {
-                    // Albums data not present in the shared preferences
-                    // Launch settings activity, so that user can modify
-                    // the settings
-
-                    Intent i = new Intent(SplashActivity.this,
-                            SettingsActivity.class);
-                    // clear all the activities
-                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                            | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(i);
                 }
 
             }
@@ -149,7 +134,7 @@ public class SplashActivity extends Activity {
         jsonObjReq.setShouldCache(false);
 
         // Making the request
-        AppController.getInstance().addToRequestQueue(jsonObjReq);
+        MyApplication.getInstance().addToRequestQueue(jsonObjReq);
 
     }
 

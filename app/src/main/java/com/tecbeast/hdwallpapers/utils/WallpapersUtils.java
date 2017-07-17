@@ -1,4 +1,4 @@
-package com.tecbeast.hdwallpapers.picasawallpapers.util;
+package com.tecbeast.hdwallpapers.utils;
 
 
 import java.io.File;
@@ -16,14 +16,15 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.tecbeast.hdwallpapers.R;
+import com.tecbeast.hdwallpapers.preference.PrefManager;
 
-public class Utils {
-	private String TAG = Utils.class.getSimpleName();
+public class WallpapersUtils {
+	private String TAG = WallpapersUtils.class.getSimpleName();
 	private Context _context;
 	private PrefManager pref;
 
 	// constructor
-	public Utils(Context context) {
+	public WallpapersUtils(Context context) {
 		this._context = context;
 		pref = new PrefManager(_context);
 	}

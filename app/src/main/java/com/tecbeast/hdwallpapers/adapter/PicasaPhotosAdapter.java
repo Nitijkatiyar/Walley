@@ -1,4 +1,4 @@
-package com.tecbeast.hdwallpapers.picasawallpapers.helper;
+package com.tecbeast.hdwallpapers.adapter;
 
 
 import android.app.Activity;
@@ -13,22 +13,22 @@ import android.widget.RelativeLayout;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.tecbeast.hdwallpapers.R;
-import com.tecbeast.hdwallpapers.picasawallpapers.app.AppController;
-import com.tecbeast.hdwallpapers.picasawallpapers.picasa.model.Wallpaper;
+import com.tecbeast.hdwallpapers.MyApplication;
+import com.tecbeast.hdwallpapers.model.Wallpaper;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class GridViewAdapter extends BaseAdapter {
+public class PicasaPhotosAdapter extends BaseAdapter {
 
 	private Activity _activity;
 	private LayoutInflater inflater;
 	private List<Wallpaper> wallpapersList = new ArrayList<Wallpaper>();
 	private int imageWidth;
-	ImageLoader imageLoader = AppController.getInstance().getImageLoader();
+	ImageLoader imageLoader = MyApplication.getInstance().getImageLoader();
 
-	public GridViewAdapter(Activity activity, List<Wallpaper> wallpapersList,
-			int imageWidth) {
+	public PicasaPhotosAdapter(Activity activity, List<Wallpaper> wallpapersList,
+							   int imageWidth) {
 		this._activity = activity;
 		this.wallpapersList = wallpapersList;
 		this.imageWidth = imageWidth;
@@ -58,7 +58,7 @@ public class GridViewAdapter extends BaseAdapter {
 			convertView = inflater.inflate(R.layout.grid_item_photo, null);
 
 		if (imageLoader == null)
-			imageLoader = AppController.getInstance().getImageLoader();
+			imageLoader = MyApplication.getInstance().getImageLoader();
 
 		// Grid thumbnail image view
 		NetworkImageView thumbNail = (NetworkImageView) convertView
